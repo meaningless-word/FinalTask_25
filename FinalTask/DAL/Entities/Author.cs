@@ -13,5 +13,10 @@ namespace FinalTask.DAL.Entities
 		/// авторство
 		/// </summary>
 		public List<Book> Authorship { get; set; } = new List<Book>();
+
+		public Author(string name)
+		{
+			Name = name;
+		}
 	}
 }

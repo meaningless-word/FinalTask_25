@@ -15,35 +15,28 @@ namespace FinalTask.BLL.Services
 			authorRepository = new AuthorRepository();
 		}
 
-		public void Create(AuthorDTO author)
+		public void Create(string author)
 		{
-			Author entity = new Author();
-
-			entity.Name = author.Name;
-
+			Author entity = new Author(author);
 			authorRepository.Create(entity);
 		}
 
-		public List<Author> CreateIfNotExist(AuthorDTO author)
+		public List<Author> CreateIfNotExist(string authors)
 		{
-			string[] names = author.Name.Split(",");
+			string[] names = authors.Split(",");
 			var result = new List<Author>();
 
 			for (int i = 0; i < names.Length; i++)
 			{
-				Author item = authorRepository.ReadAll().Where(x => x.Name == names[i]).FirstOrDefault();
+				Author item = authorRepository.Read(names[i]);
 				if (item is null)
 				{
-					var a = new AuthorDTO() { Name = names[i] };
-					Create(a);
+					Create(names[i]);
 				}
 
-				result.Add(authorRepository.ReadAll().Where(x => x.Name == names[i]).FirstOrDefault());
+				result.Add(authorRepository.Read(names[i]));
 			}
-
 			return result;
 		}
-
-
 	}
 }

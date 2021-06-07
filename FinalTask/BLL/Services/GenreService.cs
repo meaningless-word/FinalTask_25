@@ -15,25 +15,22 @@ namespace FinalTask.BLL.Services
 			genreRepository = new GenreRepository();
 		}
 
-		public void Create(GenreDTO genre)
+		public void Create(string genre)
 		{
-			Genre entity = new Genre();
-
-			entity.Name = genre.Name;
-
+			Genre entity = new Genre(genre);
 			genreRepository.Create(entity);
 		}
 
 		/// <summary>
-		/// добавление записи, если такой ещё не было, либо возврат суествующей
+		/// добавление записи, если такой ещё не было, либо возврат существующей
 		/// </summary>
 		/// <param name="genre">наименование</param>
 		/// <returns></returns>
-		public Genre CreateIfNotExists(GenreDTO genre)
+		public Genre CreateIfNotExists(string genre)
 		{
-			Genre item = genreRepository.ReadAll().Where(x => x.Name == genre.Name).FirstOrDefault();
+			Genre item = genreRepository.Read(genre);
 			if (item is null) Create(genre);
-			return genreRepository.ReadAll().Where(x => x.Name == genre.Name).FirstOrDefault();
+			return genreRepository.Read(genre);
 		}
 	}
 }

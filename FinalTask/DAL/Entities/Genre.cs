@@ -12,5 +12,10 @@ namespace FinalTask.DAL.Entities
 
 		// навигационное свойство (один-ко-многим)
 		public List<Book> Books { get; set; } = new List<Book>();
+
+		public Genre(string name)
+		{
+			Name = name;
+		}
 	}
 }

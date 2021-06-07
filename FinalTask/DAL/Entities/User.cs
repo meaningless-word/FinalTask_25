@@ -13,5 +13,11 @@ namespace FinalTask.DAL.Entities
 
 		public List<Book> ReadedBooks { get; set; } = new List<Book>();
 
+		public User(string name, string email)
+		{
+			Name = name;
+			Email = email;
+		}
+
 	}
 }

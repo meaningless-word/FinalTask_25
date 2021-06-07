@@ -20,11 +20,7 @@ namespace FinalTask.BLL.Services
 
 		public void Create(UserDTO user)
 		{
-			User entity = new User();
-
-			entity.Name = user.Name;
-			entity.Email = user.Email;
-
+			User entity = new User(user.Name, user.Email);
 			userRepository.Create(entity);
 		}
 

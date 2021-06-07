@@ -29,6 +29,14 @@ namespace FinalTask.DAL.Repositories
 			return item;
 		}
 
+		public Author Read(string name)
+		{
+			Author item = db.Authors.Where(x => x.Name == name).FirstOrDefault();
+			if (item is null) throw new AuthorNotFoundException();
+
+			return item;
+		}
+
 		public List<Author> ReadAll()
 		{
 			return db.Authors.ToList();

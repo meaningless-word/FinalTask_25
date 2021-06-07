@@ -65,6 +65,20 @@ namespace FinalTask.DAL.Repositories
 			return result;
 		}
 
+		public List<Book> Read(string partOfName, int yearAfter, int yearBefore, int choise)
+		{
+			var result = new List<Book>();
+			switch (choise)
+			{
+				case 1:
+					{
+						result = db.Books.Include("Authors").Include("Genre").Where(x => x.Genre.Name.Contains(partOfName) && x.YearOfIssue >= yearAfter && x.YearOfIssue <= yearBefore).ToList();
+						break;
+					}
+			}
+			return result;
+		}
+
 		public List<Book> ReadAll()
 		{
 			return db.Books.Include("Authors").Include("Genre").ToList();
@@ -78,6 +92,7 @@ namespace FinalTask.DAL.Repositories
 			item.GenreId = entity.GenreId;
 			item.Authors = entity.Authors;
 			item.Readers = entity.Readers;
+			db.ChangeTracker.DetectChanges();
 			db.SaveChanges();
 		}
 

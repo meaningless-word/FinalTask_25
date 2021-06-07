@@ -1,9 +1,7 @@
-﻿using FinalTask.BLL.Exceptions;
-using FinalTask.DAL.Entities;
+﻿using FinalTask.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace FinalTask.DAL.Repositories
 {
@@ -24,18 +22,12 @@ namespace FinalTask.DAL.Repositories
 
 		public Genre Read(int id)
 		{
-			Genre item = db.Genres.Where(x => x.Id == id).FirstOrDefault();
-			if (item is null) throw new GenreNotFoundException();
-
-			return item;
+			return db.Genres.Where(x => x.Id == id).FirstOrDefault();
 		}
 
 		public Genre Read(string genreName)
 		{
-			Genre item = db.Genres.Where(x => x.Name.Contains(genreName)).FirstOrDefault();
-			if (item is null) throw new GenreNotFoundException();
-
-			return item;
+			return db.Genres.Where(x => x.Name == genreName).FirstOrDefault();
 		}
 
 		public List<Genre> ReadAll()

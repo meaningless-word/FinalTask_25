@@ -27,15 +27,15 @@ namespace FinalTask.BLL.Services
 		{
 			Book entity = new Book();
 
-			entity.GenreId = Program.genreService.CreateIfNotExists(new GenreDTO() { Name = book.Genre }).Id;
+			entity.GenreId = Program.genreService.CreateIfNotExists(book.Genre).Id;
 			entity.Title = book.Title;
 			entity.YearOfIssue = book.YearOfIssue;
 
 			bookRepository.Create(entity);
 
-			entity = bookRepository.Read(book.Title, book.YearOfIssue, Program.genreService.CreateIfNotExists(new GenreDTO() { Name = book.Genre }).Id);
+			//entity = bookRepository.Read(book.Title, book.YearOfIssue, Program.genreService.Read(book.Genre).Id);
 			// авторы
-			List<Author> authors = Program.authorService.CreateIfNotExist(new AuthorDTO() { Name = book.Authors });
+			List<Author> authors = Program.authorService.CreateIfNotExist(book.Authors);
 			entity.Authors.AddRange(authors);
 			bookRepository.Update(entity.Id, entity);
 		}
@@ -75,7 +75,9 @@ namespace FinalTask.BLL.Services
 
 		public List<BookDTO> ReadByGenreInPeriod(string genreName, int yearAfter, int yearBefore)
 		{
-
+			return bookRepository.Read(genreName, yearAfter, yearBefore, (int)BookReadOptions.ByGenre)
+				.Select(x => new BookDTO(x.Id, x.Title, x.YearOfIssue, String.Join(", ", x.Authors.Select(y => y.Name).ToArray()), x.Genre.Name))
+				.ToList();
 		}
 
 		public void Update(int id, BookDTO book)
