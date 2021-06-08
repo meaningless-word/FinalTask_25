@@ -12,7 +12,9 @@ namespace FinalTask.PLL.Views
 		{
 			menuItems = new List<string>()
 			{
-				"добавить"
+				"добавить",
+				"показать все",
+				"изменить"
 			};
 		}
 
@@ -29,6 +31,20 @@ namespace FinalTask.PLL.Views
 				{
 					case "1":
 						{
+							var doCreate = new GenreCreationView();
+							doCreate.Show();
+							break;
+						}
+					case "2":
+						{
+							var doRead = new GenreReadAllView();
+							doRead.Show();
+							break;
+						}
+					case "3":
+						{
+							var doUpdate = new GenreChangeView();
+							doUpdate.Show();
 							break;
 						}
 				}

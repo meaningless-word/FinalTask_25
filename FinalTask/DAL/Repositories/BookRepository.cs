@@ -1,109 +1,83 @@
-﻿using FinalTask.BLL.Exceptions;
-using FinalTask.DAL.Entities;
+﻿using FinalTask.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FinalTask.DAL.Repositories
 {
-	public class BookRepository : IRepository<Book>, IDisposable
+	/// <summary>
+	/// класс базовых функций для операций над сущностью "книги"
+	/// </summary>
+	public class BookRepository
 	{
 		private AppContext db;
 
-		public BookRepository()
+		public BookRepository(AppContext db)
 		{
-			db = new AppContext();
+			this.db = db;
 		}
-
+		/// <summary>
+		/// создание
+		/// </summary>
+		/// <param name="entity"></param>
 		public void Create(Book entity)
 		{
 			db.Books.Add(entity);
-			db.SaveChanges();
 		}
-
+		/// <summary>
+		/// чтение записи по идентификатору
+		/// </summary>
+		/// <param name="id">идентификатор</param>
+		/// <returns></returns>
 		public Book Read(int id)
 		{
-			Book item = db.Books.Where(x => x.Id == id).FirstOrDefault();
-			if (item is null) throw new BookNotFoundException();
-
-			return item;
+			return db.Books.Where(x => x.Id == id).FirstOrDefault();
 		}
-
+		/// <summary>
+		/// чтение записи по :
+		/// </summary>
+		/// <param name="Title">наименование книги</param>
+		/// <param name="YearOfIssue">год издания</param>
+		/// <param name="GenreId">идетификтор жанра</param>
+		/// <returns></returns>
 		public Book Read(string Title, int YearOfIssue, int GenreId)
 		{
-			Book item = db.Books.Where(x => x.Title == Title && x.YearOfIssue == YearOfIssue && x.GenreId == GenreId).FirstOrDefault();
-			if (item is null) throw new BookNotFoundException();
-
-			return item;
+			return db.Books.Where(x => x.Title == Title && x.YearOfIssue == YearOfIssue && x.GenreId == GenreId).FirstOrDefault();
 		}
-
-		public Book Read(string Title, string Author)
+		/// <summary>
+		/// чтение записи по фрагменту :
+		/// </summary>
+		/// <param name="partOfTitle">части наименования</param>
+		/// <param name="partOfAuthor">части имени автора</param>
+		/// <param name="partOfGenre">части наименования жанра</param>
+		/// <returns></returns>
+		public List<Book> Read(string partOfTitle, string partOfAuthor, string partOfGenre)
 		{
-			Book item = db.Books.Include("Authors").Where(x => x.Title.Contains(Title) && x.Authors.Where(y => y.Name.Contains(Author)).ToList().Count > 0).FirstOrDefault();
-			if (item is null) throw new BookNotFoundException();
-
-			return item;
+			return db.Books.Include("Authors").Include("Genre").Where(x => x.Title.Contains(partOfTitle) && x.Authors.Where(y => y.Name.Contains(partOfAuthor)).ToList().Count > 0 && x.Genre.Name.Contains(partOfGenre)).ToList();
 		}
-
-		public List<Book> Read(string partOfName, int choise)
-		{
-			var result = new List<Book>();
-			switch (choise)
-			{
-				case 1:
-					{
-						result = db.Books.Include("Authors").Include("Genre").Where(x => x.Genre.Name.Contains(partOfName)).ToList();
-						break;
-					}
-				case 2:
-					{
-						result = db.Books.Include("Authors").Include("Genre").Where(x => x.Authors.Where(y => y.Name.Contains(partOfName)).ToList().Count > 0).ToList();
-						break;
-					}
-			}
-			return result;
-		}
-
-		public List<Book> Read(string partOfName, int yearAfter, int yearBefore, int choise)
-		{
-			var result = new List<Book>();
-			switch (choise)
-			{
-				case 1:
-					{
-						result = db.Books.Include("Authors").Include("Genre").Where(x => x.Genre.Name.Contains(partOfName) && x.YearOfIssue >= yearAfter && x.YearOfIssue <= yearBefore).ToList();
-						break;
-					}
-			}
-			return result;
-		}
-
+		/// <summary>
+		/// чтение всех записей
+		/// </summary>
+		/// <returns></returns>
 		public List<Book> ReadAll()
 		{
 			return db.Books.Include("Authors").Include("Genre").ToList();
 		}
-
-		public void Update(int id, Book entity)
+		/// <summary>
+		/// изменение записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Update(Book entity)
 		{
-			Book item = Read(id);
-			item.Title = entity.Title;
-			item.YearOfIssue = entity.YearOfIssue;
-			item.GenreId = entity.GenreId;
-			item.Authors = entity.Authors;
-			item.Readers = entity.Readers;
-			db.ChangeTracker.DetectChanges();
-			db.SaveChanges();
+			db.Books.Update(entity);
 		}
-
-		public void Delete(int id)
+		/// <summary>
+		/// удаление записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Delete(Book entity)
 		{
-			throw new NotImplementedException();
-		}
-
-		public void Dispose()
-		{
-			db.Dispose();
+			db.Books.Remove(entity);
 		}
 	}
 }

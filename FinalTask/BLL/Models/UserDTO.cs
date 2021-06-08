@@ -2,14 +2,15 @@
 {
 	public class UserDTO
 	{
-		public int? Id { get; set; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Email { get; set; }
 		public int ReadedBooksCount { get; set; }
+		public int GivedBookId { get; set; }
 
 		public UserDTO() { }
 
-		public UserDTO(int? Id, string Name, string Email, int ReadedBooksCount)
+		public UserDTO(int Id, string Name, string Email, int ReadedBooksCount)
 		{
 			this.Id = Id;
 			this.Name = Name;

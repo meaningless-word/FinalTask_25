@@ -41,10 +41,12 @@ namespace FinalTask.PLL.Views
 						}
 					case "3":
 						{
+							Program.genreMenu.Choose();
 							break;
 						}
 					case "4":
 						{
+							Program.authorMenu.Choose();
 							break;
 						}
 				}

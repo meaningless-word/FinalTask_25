@@ -7,10 +7,16 @@ namespace FinalTask.DAL.Entities
 	/// </summary>
 	public class Author
 	{
+		/// <summary>
+		/// идентификатор
+		/// </summary>
 		public int Id { get; set; }
+		/// <summary>
+		/// имя
+		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
-		/// авторство
+		/// авторство (соавторство) - навигационное свойство (многие-ко-многим)
 		/// </summary>
 		public List<Book> Authorship { get; set; } = new List<Book>();
 

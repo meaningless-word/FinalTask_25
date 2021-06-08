@@ -1,5 +1,5 @@
-﻿using FinalTask.BLL.Exceptions;
-using FinalTask.BLL.Models;
+﻿using FinalTask.BLL.Models;
+using FinalTask.BLL.Services;
 using FinalTask.PLL.Helpers;
 using System;
 using System.Collections.Generic;
@@ -7,31 +7,48 @@ using System.Linq;
 
 namespace FinalTask.PLL.Views
 {
+	/// <summary>
+	/// класс запроса входящих параметров и визуализации запросов к сущностям "книга"
+	/// </summary>
 	public class BookReadAllView
 	{
+
 		public void Show()
 		{
-			List<BookDTO> books = Program.bookService.ReadAll();
-			Display(books);
+			using (LibraryService libraryService = new LibraryService())
+			{
+				List<BookDTO> books = libraryService.ReadAllBooks();
+				Display(books);
+			}
 		}
 
 		public void AlphabeticTitleShow()
 		{
-			List<BookDTO> books = Program.bookService.ReadAll().OrderBy(x => x.Title).ToList();
-			Display(books);
+			using (LibraryService libraryService = new LibraryService())
+			{
+				List<BookDTO> books = libraryService.ReadAllBooks().OrderBy(x => x.Title).ToList();
+				Display(books);
+			}
 		}
 
 		public void YearIssueDescShow()
 		{
-			List<BookDTO> books = Program.bookService.ReadAll().OrderByDescending(x => x.YearOfIssue).ToList();
-			Display(books);
+			using (LibraryService libraryService = new LibraryService())
+			{
+				List<BookDTO> books = libraryService.ReadAllBooks().OrderByDescending(x => x.YearOfIssue).ToList();
+				Display(books);
+			}
 		}
 
 		public void LastIssuedShow()
 		{
-			List<BookDTO> books = new List<BookDTO>();
-			books.Add(Program.bookService.ReadAll().OrderByDescending(x => x.YearOfIssue).FirstOrDefault());
-			Display(books);
+			using (LibraryService libraryService = new LibraryService())
+			{
+				List<BookDTO> books = new List<BookDTO>();
+				books.Add(libraryService.ReadAllBooks().OrderByDescending(x => x.YearOfIssue).FirstOrDefault());
+				Display(books);
+			}
+
 		}
 
 		public void IsTheBookINLibrary()
@@ -43,7 +60,10 @@ namespace FinalTask.PLL.Views
 				string author = Console.ReadLine();
 				Console.Write("введите часть наименования книги: ");
 				string title = Console.ReadLine();
-				Console.WriteLine(Program.bookService.IsTheBookInLibrary(title, author) ? "есть" : "нет");
+				using (LibraryService libraryService = new LibraryService())
+				{
+					Console.WriteLine(libraryService.IsTheBookInLibrary(title, author) ? "есть" : "нет");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -58,8 +78,11 @@ namespace FinalTask.PLL.Views
 				Console.WriteLine("подсчёт количества книг определенного жанра в библиотеке");
 				Console.Write("введите часть наименования жанра: ");
 				string genre = Console.ReadLine();
-				List<BookDTO> books = Program.bookService.ReadByGenre(genre);
-				Console.WriteLine("{0} книг жанра {1} присутствуют в библиотеке", books.Count, String.Join(", ", books.Select(x => x.Genre).Distinct()));
+				using (LibraryService libraryService = new LibraryService())
+				{
+					List<BookDTO> books = libraryService.ReadBooksByGenre(genre);
+					Console.WriteLine("{0} книг жанра {1} присутствуют в библиотеке", books.Count, String.Join(", ", books.Select(x => x.Genre).Distinct()));
+				}
 			}
 			catch (Exception ex)
 			{
@@ -74,8 +97,11 @@ namespace FinalTask.PLL.Views
 				Console.WriteLine("подсчёт количества книг определенного автора в библиотеке");
 				Console.Write("введите часть имени автора: ");
 				string author = Console.ReadLine();
-				List<BookDTO> books = Program.bookService.ReadByAuthor(author);
-				Console.WriteLine("{0} книг автора {1} присутствуют в библиотеке", books.Count, String.Join(", ", books.Select(x => x.Authors).Distinct()));
+				using (LibraryService libraryService = new LibraryService())
+				{
+					List<BookDTO> books = libraryService.ReadBooksByAuthor(author);
+					Console.WriteLine("{0} книг автора {1} присутствуют в библиотеке", books.Count, String.Join(", ", books.Select(x => x.Authors).Distinct()));
+				}
 			}
 			catch (Exception ex)
 			{
@@ -94,8 +120,11 @@ namespace FinalTask.PLL.Views
 				int yearAfter = int.Parse(Console.ReadLine());
 				Console.Write("введите год выпуска окончания периода: ");
 				int yearBefore = int.Parse(Console.ReadLine());
-				List<BookDTO> books = Program.bookService.ReadByGenreInPeriod(genre, yearAfter, yearBefore);
-				Display(books);
+				using (LibraryService libraryService = new LibraryService())
+				{
+					List<BookDTO> books = libraryService.ReadBooksByGenre(genre).Where(x => x.YearOfIssue >= yearAfter && x.YearOfIssue <= yearBefore).ToList();
+					Display(books);
+				}
 			}
 			catch (FormatException)
 			{

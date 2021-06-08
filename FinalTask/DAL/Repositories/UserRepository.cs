@@ -1,65 +1,71 @@
-﻿using FinalTask.BLL.Exceptions;
-using FinalTask.DAL.Entities;
+﻿using FinalTask.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FinalTask.DAL.Repositories
 {
-	public class UserRepository : IRepository<User>, IDisposable
+	/// <summary>
+	/// класс базовых функций для операций над сущностью "пользователи"
+	/// </summary>
+	public class UserRepository
 	{
 		private AppContext db;
 
-		public UserRepository()
+		public UserRepository(AppContext db)
 		{
-			db = new AppContext();
+			this.db = db;
 		}
-
+		/// <summary>
+		/// создание
+		/// </summary>
+		/// <param name="entity"></param>
 		public void Create(User entity)
 		{
 			db.Users.Add(entity);
-			db.SaveChanges();
 		}
-
+		/// <summary>
+		/// чтение записи по идентификатору
+		/// </summary>
+		/// <param name="id">идентификатор</param>
+		/// <returns></returns>
 		public User Read(int id)
 		{
-			User item = db.Users.Include("ReadedBooks").Where(x => x.Id == id).FirstOrDefault();
-			if (item is null) throw new UserNotFoundException();
-
-			return item;
+			return db.Users.Include("ReadedBooks").Where(x => x.Id == id).FirstOrDefault();
 		}
-
+		/// <summary>
+		/// чтение записи по имени и e-mail пользователя
+		/// </summary>
+		/// <param name="Name">имя</param>
+		/// <param name="Email">e-mail</param>
+		/// <returns></returns>
 		public User Read(string Name, string Email)
 		{
-			User item = db.Users.Include("ReadedBooks").Where(x => x.Name == Name && x.Email == Email).FirstOrDefault();
-			if (item is null) throw new UserNotFoundException();
-
-			return item;
+			return db.Users.Include("ReadedBooks").Where(x => x.Name == Name && x.Email == Email).FirstOrDefault();
 		}
-
+		/// <summary>
+		/// чтение всех записей
+		/// </summary>
+		/// <returns></returns>
 		public List<User> ReadAll()
 		{
 			return db.Users.Include("ReadedBooks").ToList();
 		}
-
-		public void Update(int id, User entity)
+		/// <summary>
+		/// изменение записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Update(User entity)
 		{
-			User item = Read(id);
-			item.Name = entity.Name;
-			item.Email = entity.Email;
-			item.ReadedBooks = entity.ReadedBooks;
-			db.SaveChanges();
+			db.Users.Update(entity);
 		}
-
-		public void Delete(int id)
+		/// <summary>
+		/// удаление записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Delete(User entity)
 		{
-			throw new NotImplementedException();
-		}
-
-		public void Dispose()
-		{
-			db.Dispose();
+			db.Users.Remove(entity);
 		}
 	}
 }

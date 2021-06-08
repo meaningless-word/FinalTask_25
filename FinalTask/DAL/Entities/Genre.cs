@@ -7,10 +7,17 @@ namespace FinalTask.DAL.Entities
 	/// </summary>
 	public class Genre
 	{
+		/// <summary>
+		/// идентификатор
+		/// </summary>
 		public int Id { get; set; }
+		/// <summary>
+		/// наименование
+		/// </summary>
 		public string Name { get; set; }
-
-		// навигационное свойство (один-ко-многим)
+		/// <summary>
+		/// ссылка на книги - навигационное свойство (один-ко-многим)
+		/// </summary>
 		public List<Book> Books { get; set; } = new List<Book>();
 
 		public Genre(string name)

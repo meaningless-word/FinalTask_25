@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BLL\Services\AuthorService.cs" />
+    <Compile Remove="BLL\Services\BookService.cs" />
+    <Compile Remove="BLL\Services\GenreService.cs" />
+    <Compile Remove="BLL\Services\UserService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="BLL\Services\BookService.cs~RF33ab514c.TMP" />
     <None Remove="DAL\AppContext.cs~RF3114a5dd.TMP" />
   </ItemGroup>

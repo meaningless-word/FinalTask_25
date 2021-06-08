@@ -1,60 +1,69 @@
-﻿using FinalTask.BLL.Exceptions;
-using FinalTask.DAL.Entities;
-using System;
+﻿using FinalTask.DAL.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FinalTask.DAL.Repositories
 {
-	public class AuthorRepository : IRepository<Author>, IDisposable
+	/// <summary>
+	/// класс базовых функций для операций над сущностью "авторы книг"
+	/// </summary>
+	public class AuthorRepository
 	{
 		private AppContext db;
 
-		public AuthorRepository()
+		public AuthorRepository(AppContext db)
 		{
-			db = new AppContext();
+			this.db = db;
 		}
-
+		/// <summary>
+		/// создание
+		/// </summary>
+		/// <param name="entity"></param>
 		public void Create(Author entity)
 		{
 			db.Authors.Add(entity);
-			db.SaveChanges();
 		}
-
+		/// <summary>
+		/// чтение записи по идентификатору
+		/// </summary>
+		/// <param name="id">идентификатор</param>
+		/// <returns></returns>
 		public Author Read(int id)
 		{
-			Author item = db.Authors.Where(x => x.Id == id).FirstOrDefault();
-			if (item is null) throw new AuthorNotFoundException();
-
-			return item;
+			return  db.Authors.Where(x => x.Id == id).FirstOrDefault();
 		}
-
+		/// <summary>
+		/// чтение записи по имени
+		/// </summary>
+		/// <param name="name">имя</param>
+		/// <returns></returns>
 		public Author Read(string name)
 		{
-			Author item = db.Authors.Where(x => x.Name == name).FirstOrDefault();
-			if (item is null) throw new AuthorNotFoundException();
-
-			return item;
+			return db.Authors.Where(x => x.Name == name).FirstOrDefault();
 		}
-
+		/// <summary>
+		/// чтение всех записей
+		/// </summary>
+		/// <returns></returns>
 		public List<Author> ReadAll()
 		{
 			return db.Authors.ToList();
 		}
-
-		public void Update(int id, Author entity)
+		/// <summary>
+		/// изменение записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Update(Author entity)
 		{
-			throw new NotImplementedException();
+			db.Authors.Update(entity);
 		}
-
-		public void Delete(int id)
+		/// <summary>
+		/// удаление записи
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Delete(Author entity)
 		{
-			throw new NotImplementedException();
-		}
-
-		public void Dispose()
-		{
-			db.Dispose();
+			db.Authors.Remove(entity);
 		}
 	}
 }

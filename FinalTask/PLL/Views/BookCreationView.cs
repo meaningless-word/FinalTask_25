@@ -1,9 +1,13 @@
 ﻿using FinalTask.BLL.Models;
+using FinalTask.BLL.Services;
 using FinalTask.PLL.Helpers;
 using System;
 
 namespace FinalTask.PLL.Views
 {
+	/// <summary>
+	/// класс запроса входящих параметров и визуализации создания сущности "книга"
+	/// </summary>
 	public class BookCreationView
 	{
 		public void Show()
@@ -22,7 +26,11 @@ namespace FinalTask.PLL.Views
 				Console.Write("жанр: ");
 				book.Genre = Console.ReadLine();
 
-				Program.bookService.Create(book);
+				using (LibraryService libraryService = new LibraryService())
+				{
+					var r = libraryService.Create(book);
+					Console.WriteLine("добавлена запись с Id = {0}", r.Id);
+				}
 			}
 			catch (Exception ex)
 			{
